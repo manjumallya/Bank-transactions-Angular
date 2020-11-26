@@ -1,0 +1,62 @@
+<mat-toolbar color="primary">
+  <mat-icon>work</mat-icon>
+  <div fxFlex="grow" style="text-align: center">Recent Transactions</div>
+</mat-toolbar>
+<div class="app-filter">
+  <mat-form-field>
+    <input matInput [formControl]="filter" placeholder="Search by typing..."/>
+    <mat-icon class="app-filter-clear" matSuffix *ngIf="filter.value" (click)="filter.reset()">close</mat-icon>
+  </mat-form-field>
+  <div>Sort&nbsp;by&nbsp;</div>
+  <mat-button-toggle-group>
+    <mat-button-toggle (change)="sortBy('transactionDate')">
+      <span>DATE</span>
+      <ng-container *ngTemplateOutlet="idicator; context: {$implicit: 'transactionDate'}"></ng-container>
+    </mat-button-toggle>
+    <mat-button-toggle (change)="sortBy('merchant')">
+      <span>BENEFICIARY</span>
+      <ng-container *ngTemplateOutlet="idicator; context: {$implicit: 'merchant'}"></ng-container>
+    </mat-button-toggle>
+    <mat-button-toggle (change)="sortBy('amount')">
+      <span>AMOUNT</span>
+      <ng-container *ngTemplateOutlet="idicator; context: {$implicit: 'amount'}"></ng-container>
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+</div>
+<table
+  mat-table
+  [dataSource]="transactions$"
+  matSort
+  matSortActive="transactionDate"
+  matSortDirection="desc"
+>
+  <ng-container matColumnDef="transactionDate">
+    <td
+      mat-cell
+      *matCellDef="let element"
+      class="app-column-date"
+      [style.border-left-color]="element.categoryCode"
+    >
+      {{element.transactionDate | date: 'MMM dd'}}
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="merchantLogo">
+    <td mat-cell *matCellDef="let element" class="app-column-logo">
+      <img class="app-logo" [src]="element.merchantLogo"/>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="merchant">
+    <td mat-cell *matCellDef="let element" class="app-column-merchant">
+      <div class="app-merchant-name">{{element.merchant}}</div>
+      <div class="app-merchant-type">{{element.transactionType}}</div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="amount">
+    <td mat-cell *matCellDef="let element" class="app-column-amount">- {{element.amount | currency:element.currencyCode}}</td>
+  </ng-container>
+  <tr mat-row *matRowDef="let row; columns: fields;"></tr>
+</table>
+
+<ng-template #idicator let-sorting>
+  <mat-icon *ngIf="sorting === sort.active">arrow_drop_{{sort.direction == 'desc' ? 'down' : 'up'}}</mat-icon>
+</ng-template>

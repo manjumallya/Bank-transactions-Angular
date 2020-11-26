@@ -1,0 +1,61 @@
+<mat-toolbar color="primary" style="position: sticky">
+  <mat-icon>swap_horizontal_circle</mat-icon>
+  <div fxFlex="grow" style="text-align: center">Make a Transfer</div>
+</mat-toolbar>
+<mat-vertical-stepper [linear]="true">
+  <mat-step [stepControl]="form" [editable]="true">
+    <ng-template matStepLabel>Fill details</ng-template>
+    <div [formGroup]="form" fxLayout="column">
+      <mat-form-field *ngFor="let account of accounts$ | async">
+        <mat-label>From account</mat-label>
+        <mat-select formControlName="from" placeholder="">
+          <mat-option
+            *ngFor="let account of accounts$ | async"
+            [value]="account.id">Free Checking(4692)- {{account.amount | currency}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>To account</mat-label>
+        <input matInput formControlName="to" placeholder="Georgia Power Electric Company">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Amount</mat-label>
+        <input matInput formControlName="amount" type="number" placeholder="0.00">
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutGap="80px">
+      <button mat-flat-button matStepperNext color="accent" [disabled]="form.invalid">Submit</button>
+      <button *ngIf="dialogRef" mat-stroked-button (click)="dialogRef.close()">Cancel</button>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="confirmation" [editable]="false">
+    <ng-template matStepLabel>Confirm data</ng-template>
+    <div *ngIf="form.value as value">
+      <p>Transfer<span class="app-accent">{{value.amount | currency}}</span> from
+        <span class="app-accent">{{(getAccount(value.from) | async)?.name}}</span> to
+        <span class="app-accent">{{value.to}}</span></p>
+      <p>
+        <mat-checkbox [formControl]="confirmation">Confirm</mat-checkbox>
+      </p>
+    </div>
+    <div fxLayout="row" fxLayoutGap="20px">
+      <button
+        mat-flat-button
+        matStepperNext
+        color="accent"
+        [disabled]="confirmation.invalid"
+        >Transfer
+      </button>
+      <button mat-stroked-button (click)="stepper.reset()">Cancel</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <p class="app-accent">Success!</p>
+    <div fxLayout="row" fxLayoutGap="20px">
+      <button mat-stroked-button (click)="stepper.reset()">One more</button>
+      <button *ngIf="dialogRef" mat-stroked-button (click)="dialogRef.close()">Close</button>
+    </div>
+  </mat-step>
+</mat-vertical-stepper>

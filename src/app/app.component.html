@@ -1,0 +1,21 @@
+<header>
+  <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="20px" class="app-header">
+    <div fxFlex="grow" fxFlexAlign="center" class="app-logo"></div>
+  </div>
+</header>
+<section>
+  <div fxLayout="row" fxLayoutGap="20px" class="app-content">
+    <app-do-transfer [fxHide.lt-md]="true"></app-do-transfer>
+    <app-show-transactions fxFlex="grow"></app-show-transactions>
+  </div>
+  <button
+    [fxHide]="true"
+    [fxShow.lt-md]="true"
+    mat-fab
+    color="accent"
+    class="app-add-button"
+    (click)="openAddDialog()"
+  >
+    <mat-icon>swap_horizontal_circle</mat-icon>
+  </button>
+</section>

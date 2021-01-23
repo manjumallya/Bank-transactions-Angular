@@ -1,4 +1,4 @@
-# Backbase Assignment
+# Bank Transaction Assignment in Angular
 
 - The application is written with Angular 7 because of libraries available for Angular 7
 - I've used Matstepper for implementing steps in Do Transfer component
